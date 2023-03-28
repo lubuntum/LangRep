@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="3dp"
+    android:paddingBottom="5dp"
+
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout
+        android:id="@+id/main_info_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center">
+            <ImageButton
+                android:id="@+id/play"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:backgroundTint="@color/white"
+                android:src="@drawable/play"/>
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/record_name"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:textSize="21sp"
+                android:textStyle="bold"
+                android:text="Record name"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="start|center">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="repeat"
+                android:textSize="21sp"/>
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/total_repeats"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:inputType="number"
+                android:hint="0"
+                android:gravity="center"/>
+            <ImageButton
+                android:id="@+id/loop"
+                android:layout_width="50dp"
+                android:layout_height="30dp"
+                android:src="@drawable/loop"
+                android:backgroundTint="@color/white"
+                android:scaleType="centerCrop" />
+            <ImageButton
+                android:id="@+id/record_content"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:src="@drawable/change_content"
+                android:backgroundTint="@color/white"
+                android:scaleType="centerCrop"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/main_info_container"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginEnd="65dp"
+        android:layout_marginStart="50dp">
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/duration"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/duration_of_record"/>
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/words"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:text="@string/words_count"/>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

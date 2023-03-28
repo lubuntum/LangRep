@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">LangRep</string>
+    <string name="duration_of_record">duration:%d sec</string>
+    <string name="words_count">words: %d</string>
+</resources>
