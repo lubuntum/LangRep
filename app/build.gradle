@@ -15,6 +15,9 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    buildFeatures {
+        viewBinding true
+    }
 
     buildTypes {
         release {
@@ -29,7 +32,14 @@ android {
 }
 
 dependencies {
+    def room_version = "2.5.1"
+
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.25'
     implementation 'com.beardedhen:androidbootstrap:2.3.2'
+
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'

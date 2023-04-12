@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/record_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingTop="3dp"
     android:paddingBottom="5dp"
-
+    android:background="@drawable/bottom_border"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <LinearLayout
         android:id="@+id/main_info_container"
@@ -20,12 +24,13 @@
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:gravity="center">
-            <ImageButton
+            <pl.droidsonroids.gif.GifImageButton
                 android:id="@+id/play"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:backgroundTint="@color/white"
-                android:src="@drawable/play"/>
+                android:scaleType="centerCrop"
+                android:src="@drawable/gif_play_pause" />
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/record_name"
                 android:layout_width="150dp"
@@ -44,13 +49,16 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:gravity="start|center">
+            android:gravity="end|center">
 
-            <com.google.android.material.textview.MaterialTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="repeat"
-                android:textSize="21sp"/>
+            <ImageView
+                android:id="@+id/repeat"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_repeat"
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"
+                app:tint="@color/bootstrap_brand_primary"/>
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/total_repeats"
@@ -59,21 +67,24 @@
                 android:layout_marginStart="5dp"
                 android:inputType="number"
                 android:hint="0"
+                android:maxLength="3"
                 android:gravity="center"/>
             <ImageButton
                 android:id="@+id/loop"
-                android:layout_width="50dp"
-                android:layout_height="30dp"
-                android:src="@drawable/loop"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_loop"
                 android:backgroundTint="@color/white"
-                android:scaleType="centerCrop" />
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"/>
             <ImageButton
-                android:id="@+id/record_content"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:id="@+id/settings"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:src="@drawable/change_content"
                 android:backgroundTint="@color/white"
-                android:scaleType="centerCrop"/>
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"/>
 
         </LinearLayout>
 

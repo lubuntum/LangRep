@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">LangRep</string>
-    <string name="duration_of_record">duration:%d sec</string>
-    <string name="words_count">words: %d</string>
+    <string name="duration_of_record">Продолжительность: %d sec</string>
+    <string name="words_count">Слов: %d</string>
+    <string name="input_word">Введите слово</string>
+    <string name="translated_word">Перевод</string>
+    <string name="tags">Теги...</string>
+    <string name="create_record">Создать запись</string>
+    <string name="record_name">Имя записи</string>
 </resources>
