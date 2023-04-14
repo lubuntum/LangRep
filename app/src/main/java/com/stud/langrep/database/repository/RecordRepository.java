@@ -65,16 +65,20 @@ public class RecordRepository {
         };
         threadIOExecutor.execute(fundAllWordsRnb);
     }
+    public void insertWordAsync(Word word){
+        Runnable insertRnb = ()-> wordDao.insert(word);
+        threadIOExecutor.execute(insertRnb);
+    }
     public void insertAllWordsAsync(List<Word> words){
-        Runnable insertRnb = ()->{
-            wordDao.insertAll(words);
-        };
+        Runnable insertRnb = ()-> wordDao.insertAll(words);
         threadIOExecutor.execute(insertRnb);
     }
     public void updateAllWordsAsync(List<Word> words){
-        Runnable updateRnb = ()->{
-            wordDao.updateAll(words);
-        };
+        Runnable updateRnb = ()-> wordDao.updateAll(words);
+        threadIOExecutor.execute(updateRnb);
+    }
+    public void updateWord(Word word){
+        Runnable updateRnb = ()-> wordDao.update(word);
         threadIOExecutor.execute(updateRnb);
     }
 }

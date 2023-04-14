@@ -39,6 +39,10 @@ public class RecordViewModel extends AndroidViewModel {
     }
     public void saveWords(List<Word> words){
         repository.updateAllWordsAsync(words);
+        for(Word word : words){
+            if (word.getId() == 0) repository.insertWordAsync(word);
+            else repository.updateWord(word);
+        }
     }
     public String translateWord(Word word){
 

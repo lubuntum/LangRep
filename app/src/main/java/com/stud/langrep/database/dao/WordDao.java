@@ -23,6 +23,8 @@ public interface WordDao {
     void insertAll(List<Word> words);
     @Update
     void updateAll(List<Word> words);
+    @Update
+    void update(Word word);
     @Delete()
     void delete(Word word);
 }
