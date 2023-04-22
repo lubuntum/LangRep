@@ -37,6 +37,10 @@ dependencies {
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
 
+    def json_version = "202302277"
+    implementation group: 'org.json', name: 'json', version: '20230227'
+    implementation("com.squareup.okhttp3:okhttp:4.10.0")
+
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.25'
     implementation 'com.beardedhen:androidbootstrap:2.3.2'
 

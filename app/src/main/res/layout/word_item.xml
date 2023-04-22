@@ -3,23 +3,25 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="5dp"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
+    android:paddingStart="15dp"
+    android:paddingEnd="15dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <com.beardedhen.androidbootstrap.BootstrapEditText
-        android:id="@+id/native_word"
+    <include layout="@layout/native_word_edit_text"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:layout_marginEnd="2dp"
         android:textSize="16sp"
-        android:hint="@string/input_word"
         android:layout_gravity="center"/>
-    <com.beardedhen.androidbootstrap.BootstrapEditText
-        android:id="@+id/translated_word"
+    <include layout="@layout/translated_word_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:textSize="16sp"
-        android:hint="@string/translated_word" />
+        android:layout_marginStart="2dp"
+        android:textSize="16sp" />
 
 
 

@@ -51,6 +51,10 @@ public class RecordContentFragment extends Fragment {
         addWordInit();
     }
     public void wordListInit(){
+        if(record.getWords() != null && record.getWords().size() > 0){
+            adapter = new WordsAdapter(getContext(), record.getWords());
+            return;
+        }
         Observer<List<Word>> wordListObserver = (words)->{
             if(words == null) return;
             if(adapter == null) adapter = new WordsAdapter(getContext(), words);

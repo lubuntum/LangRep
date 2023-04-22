@@ -53,6 +53,10 @@ public class Record implements Serializable {
         this.words = words;
     }
 
+    public List<Word> getWords() {
+        return words;
+    }
+
     public int getBasicDuration() {
         return basicDuration;
     }

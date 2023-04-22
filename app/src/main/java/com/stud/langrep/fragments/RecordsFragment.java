@@ -19,6 +19,7 @@ import com.stud.langrep.adapters.RecordsAdapter;
 import com.stud.langrep.databinding.AllRecordsFragmentBinding;
 import com.stud.langrep.database.entity.Record;
 import com.stud.langrep.database.entity.Word;
+import com.stud.langrep.test.Tester;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -60,6 +61,7 @@ public class RecordsFragment extends Fragment implements RecordsAdapter.RecordVi
     public void uploadRecordInit(){
         Observer<List<Record>> recordsObserver = records -> {
             if(adapter == null) {
+                //records.add(Tester.generateTestRecord());//TEST
                 adapter = new RecordsAdapter(getContext(), records, this);
             }
             else adapter.setRecordList(records);
