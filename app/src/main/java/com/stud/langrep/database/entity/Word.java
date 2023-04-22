@@ -12,7 +12,7 @@ import androidx.room.PrimaryKey;
 import java.io.Serializable;
 
 @Entity(tableName = "word",
-        foreignKeys = {@ForeignKey(entity = Record.class, parentColumns = "id",childColumns = "record_id")},
+        foreignKeys = {@ForeignKey(entity = Record.class, parentColumns = "id",childColumns = "record_id",onDelete = ForeignKey.CASCADE)},
         indices = {@Index(value = {"record_id"})})
 public class Word implements Serializable {
     @PrimaryKey(autoGenerate = true)

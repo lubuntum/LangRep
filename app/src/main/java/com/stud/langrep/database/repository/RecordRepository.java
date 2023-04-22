@@ -65,6 +65,13 @@ public class RecordRepository {
         };
         threadIOExecutor.execute(fundAllWordsRnb);
     }
+    public void deleteRecordAsync(Record record, MutableLiveData<String> status){
+        Runnable deleteRecordRnb = ()-> {
+            recordDao.deleteRecord(record);
+            status.postValue("Запись успешно удалена");
+        };
+        threadIOExecutor.execute(deleteRecordRnb);
+    }
     public void insertWordAsync(Word word){
         Runnable insertRnb = ()-> wordDao.insert(word);
         threadIOExecutor.execute(insertRnb);
@@ -80,5 +87,12 @@ public class RecordRepository {
     public void updateWord(Word word){
         Runnable updateRnb = ()-> wordDao.update(word);
         threadIOExecutor.execute(updateRnb);
+    }
+    public void deleteWordsByRecordIdAsync(Record record, MutableLiveData<String> status){
+        Runnable deleteWordsRnb = ()->{
+            wordDao.deleteWordsByRecordId(record.getId());
+            status.postValue("Слова удалены");
+        };
+        threadIOExecutor.execute(deleteWordsRnb);
     }
 }

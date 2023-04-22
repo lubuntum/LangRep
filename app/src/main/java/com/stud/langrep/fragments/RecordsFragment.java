@@ -23,6 +23,7 @@ import com.stud.langrep.test.Tester;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 public class RecordsFragment extends Fragment implements RecordsAdapter.RecordViewHolder.OnRecordItemClickListener {
@@ -44,7 +45,7 @@ public class RecordsFragment extends Fragment implements RecordsAdapter.RecordVi
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        viewModel = new ViewModelProvider(this).get(RecordViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(RecordViewModel.class);
         binding = AllRecordsFragmentBinding.inflate(inflater,container,false);
         return binding.getRoot();
     }
@@ -62,7 +63,7 @@ public class RecordsFragment extends Fragment implements RecordsAdapter.RecordVi
         Observer<List<Record>> recordsObserver = records -> {
             if(adapter == null) {
                 //records.add(Tester.generateTestRecord());//TEST
-                adapter = new RecordsAdapter(getContext(), records, this);
+                adapter = new RecordsAdapter(getContext(), records,this.getParentFragmentManager() ,this);
             }
             else adapter.setRecordList(records);
             binding.recordsList.setAdapter(adapter);

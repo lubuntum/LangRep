@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textfield.TextInputEditText;
@@ -18,6 +19,7 @@ import com.stud.langrep.CreateRecordActivity;
 import com.stud.langrep.R;
 import com.stud.langrep.database.entity.Record;
 import com.stud.langrep.database.repository.RecordRepository;
+import com.stud.langrep.dialog.RecordSettingsDialog;
 
 import java.util.List;
 
@@ -32,15 +34,18 @@ public class RecordsAdapter extends RecyclerView.Adapter<RecordsAdapter.RecordVi
     public final String durationPattern;
     public final String wordsCountPattern;
     private RecordViewHolder.OnRecordItemClickListener itemClickListener;
-    public RecordsAdapter(Context context, List<Record> recordList){
+    private FragmentManager fragmentManager;
+    public RecordsAdapter(Context context, List<Record> recordList, FragmentManager fragmentManager){
         this.recordList = recordList;
         inflater = LayoutInflater.from(context);
+        this.fragmentManager = fragmentManager;
         durationPattern = context.getResources().getString(R.string.duration_of_record);
         wordsCountPattern = context.getResources().getString(R.string.words_count);
     }
-    public RecordsAdapter(Context context, List<Record> recordList, RecordViewHolder.OnRecordItemClickListener listener){
+    public RecordsAdapter(Context context, List<Record> recordList, FragmentManager fragmentManager, RecordViewHolder.OnRecordItemClickListener listener){
         this.recordList = recordList;
         inflater = LayoutInflater.from(context);
+        this.fragmentManager = fragmentManager;
         durationPattern = context.getResources().getString(R.string.duration_of_record);
         wordsCountPattern = context.getResources().getString(R.string.words_count);
         this.itemClickListener = listener;
@@ -60,6 +65,11 @@ public class RecordsAdapter extends RecyclerView.Adapter<RecordsAdapter.RecordVi
         holder.recordName.setText(record.getRecordName());
         holder.totalWords.setText(String.format(wordsCountPattern,record.getTotalWords()));
         holder.averageDuration.setText(String.format(durationPattern,record.getBasicDuration()));
+        holder.setOnSettingsClickListener((view)->{
+            RecordSettingsDialog settingsDialog = RecordSettingsDialog.getInstance(record);
+            settingsDialog.show(fragmentManager, "settings");
+        });
+
     }
     @Override
     public int getItemCount() {
@@ -79,6 +89,7 @@ public class RecordsAdapter extends RecyclerView.Adapter<RecordsAdapter.RecordVi
         public TextView recordName;
         public TextInputEditText totalRepeats;
         public ImageView loop;
+        public ImageView settings;
         public TextView totalWords;
         public TextView averageDuration;
         public OnRecordItemClickListener listener;
@@ -91,6 +102,7 @@ public class RecordsAdapter extends RecyclerView.Adapter<RecordsAdapter.RecordVi
             recordName = itemView.findViewById(R.id.record_name);
             totalRepeats = itemView.findViewById(R.id.total_repeats);
             loop = itemView.findViewById(R.id.loop);
+            settings = itemView.findViewById(R.id.settings);
             totalWords = itemView.findViewById(R.id.words);
             averageDuration = itemView.findViewById(R.id.duration);
             container = itemView.findViewById(R.id.record_container);
@@ -137,6 +149,10 @@ public class RecordsAdapter extends RecyclerView.Adapter<RecordsAdapter.RecordVi
         }
         public interface OnRecordItemClickListener{
             void click(int position);
+        }
+        public void setOnSettingsClickListener(View.OnClickListener listener){
+            settings.setOnClickListener(null);
+            settings.setOnClickListener(listener);
         }
     }
 }

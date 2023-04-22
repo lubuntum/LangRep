@@ -1,6 +1,7 @@
 package com.stud.langrep.database.dao;
 
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -20,4 +21,6 @@ public interface RecordDao {
     List<Record> findAllRecords();
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insertRecord(Record record);
+    @Delete()
+    void deleteRecord(Record record);
 }

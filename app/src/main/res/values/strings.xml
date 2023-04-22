@@ -7,4 +7,9 @@
     <string name="tags">Теги...</string>
     <string name="create_record">Создать запись</string>
     <string name="record_name">Имя записи</string>
+    <string name="delete">Delete</string>
+    <string name="remove_items">Remove items</string>
+    <string name="use_autotranslate">Использовать автоперевод</string>
+    <string name="clear">clear</string>
+    <string name="autotranslate">Автоперевод</string>
 </resources>

@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import com.stud.langrep.database.entity.Record;
 import com.stud.langrep.database.entity.Word;
 
 import java.util.List;
@@ -27,4 +28,6 @@ public interface WordDao {
     void update(Word word);
     @Delete()
     void delete(Word word);
+    @Query("DELETE FROM word WHERE record_id == :id")
+    void deleteWordsByRecordId(long id);
 }
