@@ -3,10 +3,15 @@ package com.stud.langrep.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.Spanned;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -65,5 +70,45 @@ public class RecordSettingsDialog extends DialogFragment {
         deleteItemsBtn.setOnClickListener((view1 -> {
             repository.deleteWordsByRecordIdAsync(record, status);
         }));
+        speechSpeedInitEditText(view);
+    }
+
+    public void speechSpeedInitEditText(View view){
+        EditText speechSpeed = view.findViewById(R.id.speech_speed);
+        InputFilter filter = new InputFilter() {
+            int min = 0;
+            int max = 100;
+            @Override
+            public CharSequence filter(CharSequence charSequence, int i, int i1, Spanned spanned, int i2, int i3) {
+                try{
+                    int input = Integer.parseInt(spanned.toString() + charSequence.toString());
+                    if (input >= 0 && input <= 100){
+                        return null;
+                    }
+                }catch (NumberFormatException e){}
+                return "";
+            }
+        };
+        TextWatcher textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if(!charSequence.toString().contains("%")) {
+                    String text = charSequence+"%";
+                    speechSpeed.setText(text);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        };
+        speechSpeed.setFilters(new InputFilter[]{filter});
+    //speechSpeed.set
     }
 }
