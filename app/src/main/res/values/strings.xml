@@ -12,4 +12,5 @@
     <string name="use_autotranslate">Использовать автоперевод</string>
     <string name="clear">clear</string>
     <string name="autotranslate">Автоперевод</string>
+    <string name="speech_speed">Скорость воспроизведения</string>
 </resources>
