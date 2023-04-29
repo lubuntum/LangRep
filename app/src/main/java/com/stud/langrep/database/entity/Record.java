@@ -35,6 +35,14 @@ public class Record implements Serializable {
         this.basicDuration = basicDuration;
         this.words = words;
     }
+    public String composePhraseForPlaying(){
+        if (words == null) return null;
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Word word: words) {
+            stringBuilder.append(word.getTranslatedWord()).append(" ");
+        }
+        return stringBuilder.toString();
+    }
 
     public String getRecordName() {
         return recordName;

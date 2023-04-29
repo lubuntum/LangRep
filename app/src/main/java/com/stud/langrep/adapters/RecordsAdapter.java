@@ -34,6 +34,7 @@ public class RecordsAdapter extends RecyclerView.Adapter<RecordsAdapter.RecordVi
     public final String durationPattern;
     public final String wordsCountPattern;
     private RecordViewHolder.OnRecordItemClickListener itemClickListener;
+    private RecordViewHolder.PlayRecordClickListener recordClickListener;
     private FragmentManager fragmentManager;
     public RecordsAdapter(Context context, List<Record> recordList, FragmentManager fragmentManager){
         this.recordList = recordList;
@@ -42,14 +43,17 @@ public class RecordsAdapter extends RecyclerView.Adapter<RecordsAdapter.RecordVi
         durationPattern = context.getResources().getString(R.string.duration_of_record);
         wordsCountPattern = context.getResources().getString(R.string.words_count);
     }
-    public RecordsAdapter(Context context, List<Record> recordList, FragmentManager fragmentManager, RecordViewHolder.OnRecordItemClickListener listener){
+    public RecordsAdapter(Context context, List<Record> recordList,
+                          FragmentManager fragmentManager,
+                          RecordViewHolder.OnRecordItemClickListener listener,
+                          RecordViewHolder.PlayRecordClickListener playListener){
         this.recordList = recordList;
         inflater = LayoutInflater.from(context);
         this.fragmentManager = fragmentManager;
         durationPattern = context.getResources().getString(R.string.duration_of_record);
         wordsCountPattern = context.getResources().getString(R.string.words_count);
         this.itemClickListener = listener;
-
+        this.recordClickListener = playListener;
     }
     @NonNull
     @Override
@@ -57,6 +61,7 @@ public class RecordsAdapter extends RecyclerView.Adapter<RecordsAdapter.RecordVi
         View view = inflater.inflate(R.layout.record_item,parent,false);
         RecordViewHolder holder = new RecordViewHolder(view);
         holder.setOnRecordItemClickListener(itemClickListener);
+        holder.setOnPlayRecordClickListener(recordClickListener);
         return holder;
     }
     @Override
@@ -71,6 +76,19 @@ public class RecordsAdapter extends RecyclerView.Adapter<RecordsAdapter.RecordVi
         });
 
     }
+    /**
+     * Если у нас большой список и мы листаем, повторное использование View должно быть обработано
+     * Если играет какая то музыка и эта вьюшка используется повторно, тогда необходимо
+     * переключить ее в исходную позицию ведь она перерабатывается пока что, а если мы мотаем
+     * обратно в верх, тогда необходимо включить ее обратно
+     * */
+
+    @Override
+    public void onViewRecycled(@NonNull RecordViewHolder holder) {
+        super.onViewRecycled(holder);
+
+    }
+
     @Override
     public int getItemCount() {
         return recordList.size();
@@ -84,6 +102,7 @@ public class RecordsAdapter extends RecyclerView.Adapter<RecordsAdapter.RecordVi
     }
     public static class RecordViewHolder extends RecyclerView.ViewHolder{
         public GifImageButton playBtn;
+        /**Необходима что бы переключать анимацию записи, и включать аудио*/
         public boolean isPlaying = false;
         public ConstraintLayout container;
         public TextView recordName;
@@ -93,6 +112,7 @@ public class RecordsAdapter extends RecyclerView.Adapter<RecordsAdapter.RecordVi
         public TextView totalWords;
         public TextView averageDuration;
         public OnRecordItemClickListener listener;
+        public PlayRecordClickListener playListener;
         public RecordViewHolder(@NonNull View itemView) {
             super(itemView);
             playBtn = itemView.findViewById(R.id.play);
@@ -111,44 +131,70 @@ public class RecordsAdapter extends RecyclerView.Adapter<RecordsAdapter.RecordVi
             //containerInit(itemView);
             loopInit(itemView);
         }
+        public void switchPlayState(){
+            ((GifDrawable)playBtn.getDrawable()).start();
+            Runnable runnable = () -> {
+                try {
+                    Thread.sleep(750);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                playBtn.post(()->{
+                    ((GifDrawable)playBtn.getDrawable()).stop();
+                    if(isPlaying)  {
+                        ((GifDrawable)playBtn.getDrawable()).seekToFrame(10);
+                    }
+                    else  {
+                        ((GifDrawable)playBtn.getDrawable()).seekToFrame(0);
+                        playListener.playSpeech(getAdapterPosition(),this);
+                    }
+                    isPlaying = !isPlaying;
+                });
+            };
+            new Thread(runnable).start();
+        }
         /*Анимация плавно переключается между состояниями play(кадр 10) & pause(кадр 0)*/
         private void playBtnInit(){
             playBtn.setOnClickListener(view->{
-                ((GifDrawable)playBtn.getDrawable()).start();
-                Runnable runnable = () -> {
-                    try {
-                        Thread.sleep(750);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                    playBtn.post(()->{
-                        ((GifDrawable)playBtn.getDrawable()).stop();
-                        if(isPlaying)  ((GifDrawable)playBtn.getDrawable()).seekToFrame(10);
-                        else  ((GifDrawable)playBtn.getDrawable()).seekToFrame(0);
-                        isPlaying = !isPlaying;
-                    });
-
-                };
-                new Thread(runnable).start();
+                if(playListener == null) return;
+                switchPlayState();
+                //playBtn.performClick();
             });
-
         }
+        /*
+         * Событие для loop, добавить бесконечное зацикливание*/
+        private void loopInit(View itemView){
+            loop.setOnClickListener(view -> {
+                Toast.makeText(itemView.getContext(), "Loop click", Toast.LENGTH_SHORT).show();
+            });
+        }
+
         /*Событие отобразить все содержимое записи (открыть тоже окно которое будет использоваться
         при создании Record, но только уже заполненное данными этой записи)*/
         public void setOnRecordItemClickListener(OnRecordItemClickListener listener){
             this.listener = listener;
             container.setOnClickListener(view -> listener.click(getAdapterPosition()));
         }
-
-        /*
-        * Событие для loop, добавить бесконечное зацикливание*/
-        private void loopInit(View itemView){
-            loop.setOnClickListener(view -> {
-                Toast.makeText(itemView.getContext(), "Loop click", Toast.LENGTH_SHORT).show();
-            });
+        public void setOnPlayRecordClickListener(PlayRecordClickListener playListener){
+            this.playListener = playListener;
         }
+        /**
+         * Interface for all view in adapter, whenever
+         * user clicks on viewItem its trigger this listener
+         * implements in Fragments and etc..., where adapter in use
+         * */
         public interface OnRecordItemClickListener{
             void click(int position);
+        }
+        /**
+         *interface for play button, whenever user
+         * click on play button, after animation start
+         * play record, interface implements where data stored
+         * because its help transfer text from Record to speech
+         * implements in Fragments and etc..., where adapter in use
+         */
+        public interface PlayRecordClickListener{
+            void playSpeech(int position, RecordViewHolder recordViewHolder);
         }
         public void setOnSettingsClickListener(View.OnClickListener listener){
             settings.setOnClickListener(null);

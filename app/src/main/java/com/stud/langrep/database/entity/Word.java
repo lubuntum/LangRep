@@ -6,10 +6,12 @@ import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Entity(tableName = "word",
         foreignKeys = {@ForeignKey(entity = Record.class, parentColumns = "id",childColumns = "record_id",onDelete = ForeignKey.CASCADE)},

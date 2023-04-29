@@ -1,6 +1,7 @@
 package com.stud.langrep.fragments;
 
 import android.app.Application;
+import android.speech.tts.TextToSpeech;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -13,6 +14,7 @@ import com.stud.langrep.database.repository.RecordRepository;
 import java.util.List;
 //API NLP d84df178f5cd8bb7c3ee2ba082a00feb1ebcc822
 public class RecordViewModel extends AndroidViewModel {
+    public static final String PLAY_RECORD_ID = "record_play";
     RecordRepository repository;
     private MutableLiveData<List<Record>> recordLive = new MutableLiveData<>();
     private MutableLiveData<List<Word>> wordLive = new MutableLiveData<>();

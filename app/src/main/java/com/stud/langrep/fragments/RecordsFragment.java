@@ -3,6 +3,8 @@ package com.stud.langrep.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,15 +23,22 @@ import com.stud.langrep.database.entity.Record;
 import com.stud.langrep.database.entity.Word;
 import com.stud.langrep.test.Tester;
 
+import org.w3c.dom.Text;
+
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
 
-public class RecordsFragment extends Fragment implements RecordsAdapter.RecordViewHolder.OnRecordItemClickListener {
+public class RecordsFragment extends Fragment implements
+        RecordsAdapter.RecordViewHolder.OnRecordItemClickListener,
+        RecordsAdapter.RecordViewHolder.PlayRecordClickListener{
     public AllRecordsFragmentBinding binding;
     private RecordViewModel viewModel;
-    RecordsAdapter adapter;
+    private RecordsAdapter adapter;
+    private TextToSpeech tts;
     public static RecordsFragment getInstance(){
         Bundle args = new Bundle();
         RecordsFragment fragment = new RecordsFragment();
@@ -63,7 +72,7 @@ public class RecordsFragment extends Fragment implements RecordsAdapter.RecordVi
         Observer<List<Record>> recordsObserver = records -> {
             if(adapter == null) {
                 //records.add(Tester.generateTestRecord());//TEST
-                adapter = new RecordsAdapter(getContext(), records,this.getParentFragmentManager() ,this);
+                adapter = new RecordsAdapter(getContext(), records,this.getParentFragmentManager() , this, this);
             }
             else adapter.setRecordList(records);
             binding.recordsList.setAdapter(adapter);
@@ -107,11 +116,53 @@ public class RecordsFragment extends Fragment implements RecordsAdapter.RecordVi
 
     @Override
     public void click(int position) {
-        Toast.makeText(getContext(), String.valueOf(position), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), String.valueOf(position), Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(getContext(), CreateRecordActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         intent.putExtra(CreateRecordActivity.RECORD_UPDATE, adapter.getItemAtPosition(position));
         startActivity(intent);
+    }
+
+    @Override
+    public void playSpeech(int position, RecordsAdapter.RecordViewHolder recordViewHolder) {
+
+        tts = new TextToSpeech(getContext(), status -> {
+            if(status != TextToSpeech.ERROR) {
+                tts.setLanguage(Locale.ENGLISH);
+                Record currentRecord = adapter.getItemAtPosition(position);
+                //Вместо этого читать текст из выбранной по position Record
+                Observer<List<Word>> findWordsObserver = new Observer<List<Word>>() {
+                    @Override
+                    public void onChanged(List<Word> words) {
+                        currentRecord.setWords(words);
+                        tts.setSpeechRate(0.3f);
+                        tts.speak(adapter.getItemAtPosition(position).composePhraseForPlaying(),
+                                TextToSpeech.QUEUE_FLUSH,
+                                new Bundle(), viewModel.PLAY_RECORD_ID);
+                    }
+                };
+                //tts.speak("Hello, world", TextToSpeech.QUEUE_FLUSH, new Bundle(), null);
+                viewModel.getWordLive().observe(getViewLifecycleOwner(), findWordsObserver);
+            }
+        });
+        tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+            @Override
+            public void onStart(String s) {
+                recordViewHolder.itemView.post(()->Toast.makeText(getContext(), "Start", Toast.LENGTH_SHORT).show());
+
+            }
+
+            @Override
+            public void onDone(String s) {
+                recordViewHolder.switchPlayState();
+            }
+
+            @Override
+            public void onError(String s) {
+                Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
+            }
+        });
+        viewModel.uploadWords(adapter.getItemAtPosition(position));
     }
     /*
     public static List<Word> generateTestWordsList(int counter){
