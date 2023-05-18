@@ -3,7 +3,6 @@ package com.stud.langrep.fragments;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.speech.tts.TextToSpeech;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -17,7 +16,8 @@ import java.util.List;
 //API NLP d84df178f5cd8bb7c3ee2ba082a00feb1ebcc822
 public class RecordViewModel extends AndroidViewModel {
     public static final String PLAY_RECORD_ID = "record_play";
-    public static final String RECORD_SPEED = "speed";
+    public static final String RECORD_DELAY = "speed";
+    public static final String RECORD_RATING = "rating";
 
     public static final String SETTINGS = "settings";
     RecordRepository repository;

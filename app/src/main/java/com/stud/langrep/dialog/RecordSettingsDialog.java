@@ -1,17 +1,10 @@
 package com.stud.langrep.dialog;
 
-import android.app.Dialog;
-import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.InputFilter;
-import android.text.Spanned;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -23,16 +16,19 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.stud.langrep.R;
 import com.stud.langrep.database.entity.Record;
-import com.stud.langrep.database.entity.Word;
 import com.stud.langrep.database.repository.RecordRepository;
+import com.stud.langrep.databinding.RemoveRecordDialogBinding;
 import com.stud.langrep.fragments.RecordViewModel;
 
-import java.util.Objects;
+import java.sql.Array;
+import java.util.Arrays;
 
 public class RecordSettingsDialog extends DialogFragment {
     public Record record;
     public RecordRepository repository;
     public RecordViewModel recordViewModel;
+
+    RemoveRecordDialogBinding binding;
     public static RecordSettingsDialog getInstance(Record record){
         Bundle args = new Bundle();
         args.putSerializable("Record", record);
@@ -48,13 +44,12 @@ public class RecordSettingsDialog extends DialogFragment {
             this.record = (Record) getArguments().getSerializable("Record");
         repository = RecordRepository.getInstance(requireActivity().getApplication());
         recordViewModel = new ViewModelProvider(requireActivity()).get(RecordViewModel.class);
-        return inflater.inflate(R.layout.remove_record_dialog,container, false);
+        binding = RemoveRecordDialogBinding.inflate(inflater,container,false);
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        Button deleteBtn = view.findViewById(R.id.delete_btn);
-        Button deleteItemsBtn = view.findViewById(R.id.delete_words_btn);
 
         MutableLiveData<String> status = new MutableLiveData<>();
         Observer<String> statusObserver = (statusStr) ->{
@@ -64,51 +59,47 @@ public class RecordSettingsDialog extends DialogFragment {
         };
         status.observe(getViewLifecycleOwner(), statusObserver);
 
-        deleteBtn.setOnClickListener((v)-> {
+        binding.deleteBtn.setOnClickListener((v)-> {
             repository.deleteRecordAsync(record, status);
         });
-        deleteItemsBtn.setOnClickListener((view1 -> {
+        binding.deleteWordsBtn.setOnClickListener((view1 -> {
             repository.deleteWordsByRecordIdAsync(record, status);
         }));
-        speechSpeedInitEditText(view);
+        speechSettingsInit(view);
     }
 
-    public void speechSpeedInitEditText(View view){
-        EditText speechSpeed = view.findViewById(R.id.speech_speed);
-        InputFilter filter = new InputFilter() {
-            int min = 0;
-            int max = 100;
-            @Override
-            public CharSequence filter(CharSequence charSequence, int i, int i1, Spanned spanned, int i2, int i3) {
-                try{
-                    int input = Integer.parseInt(spanned.toString() + charSequence.toString());
-                    if (input >= 0 && input <= 100){
-                        return null;
-                    }
-                }catch (NumberFormatException e){}
-                return "";
-            }
-        };
-        TextWatcher textWatcher = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+    public void speechSettingsInit(View view){
+        int speedMS = recordViewModel.getPreferences().getInt(RecordViewModel.RECORD_DELAY, 500);
+        binding.pauseSpeech.setText(String.valueOf(speedMS));
 
-            }
+        String rating = String.valueOf(recordViewModel.getPreferences().getFloat(RecordViewModel.RECORD_RATING,1));
+        int index = Arrays.asList(getContext().getResources().getStringArray(R.array.speech_pause)).indexOf(rating);
+        if(index == -1) index = 0;
+        binding.ratingSpeech.setSelection(index);
 
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if(!charSequence.toString().contains("%")) {
-                    String text = charSequence+"%";
-                    speechSpeed.setText(text);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        };
-        speechSpeed.setFilters(new InputFilter[]{filter});
+        //speechSpeed.setFilters(new InputFilter[]{filter});
     //speechSpeed.set
+    }
+
+
+    @Override
+    public void onDismiss(@NonNull DialogInterface dialog) {
+        super.onDismiss(dialog);
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (binding.pauseSpeech.getText() == null || !binding.pauseSpeech.getText().toString().matches("\\d+")) return;
+        int speechSpeedData = Integer.parseInt(binding.pauseSpeech.getText().toString());
+
+        recordViewModel.getPreferences().edit()
+                .putInt(RecordViewModel.RECORD_DELAY, speechSpeedData)
+                .apply();
+        float recordRating = Float.parseFloat(binding.ratingSpeech.getSelectedItem().toString());
+        recordViewModel.getPreferences().edit()
+                .putFloat(RecordViewModel.RECORD_RATING, recordRating)
+                .apply();
     }
 }

@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
@@ -49,14 +48,14 @@ public class Record implements Serializable {
     }
     public String composePhraseForPlayingWithPrefs(SharedPreferences preferences){
         if (words == null) return null;
-        int pause_time = preferences.getInt(RecordViewModel.RECORD_SPEED, 500);
+        int pause_time = preferences.getInt(RecordViewModel.RECORD_DELAY, 500);
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("<speak>");
         for (Word word: words){
             stringBuilder.append(word.getTranslatedWord())
-                    .append(String.format("<break time=\"%dms\"",pause_time));
+                    .append(String.format("<break time=\"%dms\"/>",pause_time));
         }
-        stringBuilder.append("</speak");
+        stringBuilder.append("</speak>");
     return stringBuilder.toString();
     }
 

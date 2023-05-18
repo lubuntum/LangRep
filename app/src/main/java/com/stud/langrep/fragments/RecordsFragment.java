@@ -135,10 +135,12 @@ public class RecordsFragment extends Fragment implements
                     @Override
                     public void onChanged(List<Word> words) {
                         currentRecord.setWords(words);
-                        tts.setSpeechRate(0.3f);
-                        tts.speak(adapter.getItemAtPosition(position).composePhraseForPlaying(),
+                        tts.setSpeechRate(viewModel.getPreferences().getFloat(RecordViewModel.RECORD_RATING,1));
+                        Bundle params = new Bundle();
+                        params.putString(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID,"");
+                        tts.speak(currentRecord.composePhraseForPlayingWithPrefs(viewModel.getPreferences()),
                                 TextToSpeech.QUEUE_FLUSH,
-                                new Bundle(), RecordViewModel.PLAY_RECORD_ID);
+                                params, RecordViewModel.PLAY_RECORD_ID);
                     }
                 };
                 //tts.speak("Hello, world", TextToSpeech.QUEUE_FLUSH, new Bundle(), null);

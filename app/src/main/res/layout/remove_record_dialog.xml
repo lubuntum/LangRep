@@ -13,13 +13,30 @@
         android:checked="true"
         />
     <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/speech_speed"
+        android:id="@+id/pause_speech"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/speech_speed"
-        android:text="50%"
+        android:hint="@string/speech_delay"
         android:inputType="numberDecimal"
         />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Скорость"
+            android:textSize="20sp"/>
+        <Spinner
+            android:id="@+id/rating_speech"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:entries="@array/speech_pause"
+            android:layout_marginStart="10dp"/>
+    </LinearLayout>
+
+
 
     <LinearLayout
         android:layout_width="match_parent"
