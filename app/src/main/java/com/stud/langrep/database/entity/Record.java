@@ -1,5 +1,7 @@
 package com.stud.langrep.database.entity;
 
+import android.content.SharedPreferences;
+
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -7,6 +9,8 @@ import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
+
+import com.stud.langrep.fragments.RecordViewModel;
 
 import java.io.Serializable;
 import java.util.List;
@@ -39,9 +43,21 @@ public class Record implements Serializable {
         if (words == null) return null;
         StringBuilder stringBuilder = new StringBuilder();
         for (Word word: words) {
-            stringBuilder.append(word.getTranslatedWord()).append(" ");
+            stringBuilder.append(word.getTranslatedWord()).append(", ");
         }
         return stringBuilder.toString();
+    }
+    public String composePhraseForPlayingWithPrefs(SharedPreferences preferences){
+        if (words == null) return null;
+        int pause_time = preferences.getInt(RecordViewModel.RECORD_SPEED, 500);
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("<speak>");
+        for (Word word: words){
+            stringBuilder.append(word.getTranslatedWord())
+                    .append(String.format("<break time=\"%dms\"",pause_time));
+        }
+        stringBuilder.append("</speak");
+    return stringBuilder.toString();
     }
 
     public String getRecordName() {

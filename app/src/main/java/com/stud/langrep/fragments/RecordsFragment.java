@@ -138,7 +138,7 @@ public class RecordsFragment extends Fragment implements
                         tts.setSpeechRate(0.3f);
                         tts.speak(adapter.getItemAtPosition(position).composePhraseForPlaying(),
                                 TextToSpeech.QUEUE_FLUSH,
-                                new Bundle(), viewModel.PLAY_RECORD_ID);
+                                new Bundle(), RecordViewModel.PLAY_RECORD_ID);
                     }
                 };
                 //tts.speak("Hello, world", TextToSpeech.QUEUE_FLUSH, new Bundle(), null);

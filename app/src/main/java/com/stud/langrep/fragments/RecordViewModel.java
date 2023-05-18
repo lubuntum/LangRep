@@ -1,6 +1,8 @@
 package com.stud.langrep.fragments;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.speech.tts.TextToSpeech;
 
 import androidx.annotation.NonNull;
@@ -15,7 +17,11 @@ import java.util.List;
 //API NLP d84df178f5cd8bb7c3ee2ba082a00feb1ebcc822
 public class RecordViewModel extends AndroidViewModel {
     public static final String PLAY_RECORD_ID = "record_play";
+    public static final String RECORD_SPEED = "speed";
+
+    public static final String SETTINGS = "settings";
     RecordRepository repository;
+    SharedPreferences preferences;
     private MutableLiveData<List<Record>> recordLive = new MutableLiveData<>();
     private MutableLiveData<List<Word>> wordLive = new MutableLiveData<>();
     private MutableLiveData<String> status = new MutableLiveData<>();
@@ -23,6 +29,7 @@ public class RecordViewModel extends AndroidViewModel {
     public RecordViewModel(@NonNull Application application) {
         super(application);
         repository = RecordRepository.getInstance(application);
+        preferences = application.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
     }
     public void liveDataInit(){
         this.status = new MutableLiveData<>();
@@ -49,6 +56,10 @@ public class RecordViewModel extends AndroidViewModel {
     public String translateWord(Word word){
 
         return null;
+    }
+
+    public SharedPreferences getPreferences() {
+        return preferences;
     }
 
     public MutableLiveData<List<Record>> getRecordLive() {
