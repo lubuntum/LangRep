@@ -14,7 +14,7 @@ import okhttp3.Response;
 
 public class TranslateAPI {
     static public String API_URL = "https://api.mymemory.translated.net/get?q=";
-
+    static public String NETWORK_ERROR = "Проверьте интернет соединение";
     public String translateText(String text, String from, String to){
         OkHttpClient client = new OkHttpClient.Builder()
                 .connectionPool(new ConnectionPool(5, 10, TimeUnit.SECONDS))
@@ -27,8 +27,8 @@ public class TranslateAPI {
             return encodingToUTF8(json.getJSONObject("responseData").getString("translatedText"));
         } catch (IOException | JSONException e){
             e.printStackTrace();
+            return NETWORK_ERROR;
         }
-        return null;
     }
     public static String encodingToUTF8(String text){
         return new String(text.getBytes(StandardCharsets.UTF_8));

@@ -77,6 +77,11 @@ public class WordsAdapter extends RecyclerView.Adapter<WordsAdapter.WordViewHold
                     view.post(()-> holder.translatedWordProgress.setVisibility(View.VISIBLE));
                     String translatedText = translateAPI.translateText(word.getNativeWord(),"ru","en").trim();
                     view.post(()->{
+                        if (translatedText.equals(TranslateAPI.NETWORK_ERROR)){
+                            Toast.makeText(view.getContext(), TranslateAPI.NETWORK_ERROR, Toast.LENGTH_SHORT).show();
+                            holder.translatedWordProgress.setVisibility(View.GONE);
+                            return;
+                        }
                         word.setTranslatedWord(translatedText);
                         holder.translatedWord.setText(translatedText);
                         holder.translatedWordProgress.setVisibility(View.INVISIBLE);

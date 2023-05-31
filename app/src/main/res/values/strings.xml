@@ -16,6 +16,9 @@
     <string name="speech_delay">Паузы мс</string>
     <string name="translate">Перевод</string>
     <string name="say_word_instead_writing">Say word instead writing</string>
+    <string name="mistakes_count">Количество ошибок : %d</string>
+    <string name="correct_answers">Верные ответы : %d</string>
+    <string name="success_rate">Успешность : %s</string>
     <string-array name="speech_pause">
         <item>1</item>
         <item>0.8</item>

@@ -29,7 +29,7 @@ public class Word implements Serializable {
     @ColumnInfo(name = "transcription")
     private String transcription;//на будущее
     public Word(){}
-
+    @Ignore
     public Word(String nativeWord, String translatedWord, long recordId) {
         this.nativeWord = nativeWord;
         this.translatedWord = translatedWord;
