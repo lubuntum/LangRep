@@ -1,11 +1,11 @@
 package com.stud.langrep.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,10 +15,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textfield.TextInputEditText;
-import com.stud.langrep.CreateRecordActivity;
 import com.stud.langrep.R;
 import com.stud.langrep.database.entity.Record;
-import com.stud.langrep.database.repository.RecordRepository;
 import com.stud.langrep.dialog.RecordSettingsDialog;
 
 import java.util.List;
@@ -68,19 +66,18 @@ public class RecordsAdapter extends RecyclerView.Adapter<RecordsAdapter.RecordVi
     public void onBindViewHolder(@NonNull RecordViewHolder holder, int position) {
         Record record = recordList.get(position);
         holder.recordName.setText(record.getRecordName());
-        holder.totalWords.setText(String.format(wordsCountPattern,record.getTotalWords()));
+        holder.totalWords.setText(String.format(wordsCountPattern,record.getWordCount()));
         holder.averageDuration.setText(String.format(durationPattern,record.getBasicDuration()));
         holder.setOnSettingsClickListener((view)->{
             RecordSettingsDialog settingsDialog = RecordSettingsDialog.getInstance(record);
             settingsDialog.show(fragmentManager, "settings");
         });
-
     }
     /**
      * Если у нас большой список и мы листаем, повторное использование View должно быть обработано
      * Если играет какая то музыка и эта вьюшка используется повторно, тогда необходимо
      * переключить ее в исходную позицию ведь она перерабатывается пока что, а если мы мотаем
-     * обратно в верх, тогда необходимо включить ее обратно
+     * обратно в верх, тогда необходимо включить ее обратно (спорно)
      * */
 
     @Override
@@ -111,6 +108,7 @@ public class RecordsAdapter extends RecyclerView.Adapter<RecordsAdapter.RecordVi
         public ImageView settings;
         public TextView totalWords;
         public TextView averageDuration;
+        public ProgressBar uploadWordsProgress;
         public OnRecordItemClickListener listener;
         public PlayRecordClickListener playListener;
         public RecordViewHolder(@NonNull View itemView) {
@@ -126,6 +124,7 @@ public class RecordsAdapter extends RecyclerView.Adapter<RecordsAdapter.RecordVi
             totalWords = itemView.findViewById(R.id.words);
             averageDuration = itemView.findViewById(R.id.duration);
             container = itemView.findViewById(R.id.record_container);
+            uploadWordsProgress = itemView.findViewById(R.id.upload_words_progress);
 
             playBtnInit();
             //containerInit(itemView);
@@ -143,6 +142,7 @@ public class RecordsAdapter extends RecyclerView.Adapter<RecordsAdapter.RecordVi
                     ((GifDrawable)playBtn.getDrawable()).stop();
                     if(isPlaying)  {
                         ((GifDrawable)playBtn.getDrawable()).seekToFrame(10);
+                        playListener.stopSpeech();
                     }
                     else  {
                         ((GifDrawable)playBtn.getDrawable()).seekToFrame(0);
@@ -195,6 +195,8 @@ public class RecordsAdapter extends RecyclerView.Adapter<RecordsAdapter.RecordVi
          */
         public interface PlayRecordClickListener{
             void playSpeech(int position, RecordViewHolder recordViewHolder);
+            void stopSpeech();
+
         }
         public void setOnSettingsClickListener(View.OnClickListener listener){
             settings.setOnClickListener(null);

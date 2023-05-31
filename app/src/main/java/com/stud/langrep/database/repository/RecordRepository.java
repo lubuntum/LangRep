@@ -15,6 +15,7 @@ import com.stud.langrep.database.entity.Word;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 public class RecordRepository {
     private Database database;
@@ -49,6 +50,12 @@ public class RecordRepository {
 
     public long insertRecord(Record record){
         return recordDao.insertRecord(record);
+    }
+    public void updateRecordAsync(Record record){
+        Runnable updateRecordRnb = ()->{
+            recordDao.update(record);
+        };
+        threadIOExecutor.execute(updateRecordRnb);
     }
 
     public void insertRecordAsync(Record record, MutableLiveData<String> status){

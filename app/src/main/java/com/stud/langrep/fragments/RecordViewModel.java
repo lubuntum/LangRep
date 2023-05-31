@@ -18,8 +18,8 @@ public class RecordViewModel extends AndroidViewModel {
     public static final String PLAY_RECORD_ID = "record_play";
     public static final String RECORD_DELAY = "speed";
     public static final String RECORD_RATING = "rating";
-
     public static final String SETTINGS = "settings";
+    public static final int AVERAGE_TTS_SPEED = 13;
     RecordRepository repository;
     SharedPreferences preferences;
     private MutableLiveData<List<Record>> recordLive = new MutableLiveData<>();
@@ -53,9 +53,17 @@ public class RecordViewModel extends AndroidViewModel {
             else repository.updateWord(word);
         }
     }
-    public String translateWord(Word word){
-
-        return null;
+    public void updateRecord(Record record){
+        repository.updateRecordAsync(record);
+    }
+    public int calculateTTSBasicDuration(List<Word> words){
+        if(words == null) return 0;
+        int durationSec = 0;
+        for(Word word : words){
+            durationSec += word.getTranslatedWord().length();
+        }
+        if (durationSec == 0) return 0;
+        return durationSec/AVERAGE_TTS_SPEED;
     }
 
     public SharedPreferences getPreferences() {

@@ -122,10 +122,14 @@ public class RecordsFragment extends Fragment implements
         intent.putExtra(CreateRecordActivity.RECORD_UPDATE, adapter.getItemAtPosition(position));
         startActivity(intent);
     }
-
+    @Override
+    public void stopSpeech(){
+        if(tts != null && tts.isSpeaking())
+            tts.stop();
+    }
     @Override
     public void playSpeech(int position, RecordsAdapter.RecordViewHolder recordViewHolder) {
-
+        binding.uploadBar.setVisibility(View.VISIBLE);
         tts = new TextToSpeech(getContext(), status -> {
             if(status != TextToSpeech.ERROR) {
                 tts.setLanguage(Locale.ENGLISH);
@@ -134,13 +138,14 @@ public class RecordsFragment extends Fragment implements
                 Observer<List<Word>> findWordsObserver = new Observer<List<Word>>() {
                     @Override
                     public void onChanged(List<Word> words) {
-                        currentRecord.setWords(words);
+                        currentRecord.setWords(words);//Кэшируем
                         tts.setSpeechRate(viewModel.getPreferences().getFloat(RecordViewModel.RECORD_RATING,1));
                         Bundle params = new Bundle();
                         params.putString(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID,"");
                         tts.speak(currentRecord.composePhraseForPlayingWithPrefs(viewModel.getPreferences()),
                                 TextToSpeech.QUEUE_FLUSH,
                                 params, RecordViewModel.PLAY_RECORD_ID);
+                        binding.uploadBar.setVisibility(View.INVISIBLE);
                     }
                 };
                 //tts.speak("Hello, world", TextToSpeech.QUEUE_FLUSH, new Bundle(), null);
@@ -164,7 +169,9 @@ public class RecordsFragment extends Fragment implements
                 Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
             }
         });
-        viewModel.uploadWords(adapter.getItemAtPosition(position));
+        if (adapter.getItemAtPosition(position).getWords() == null)
+            viewModel.uploadWords(adapter.getItemAtPosition(position));
+        else viewModel.getWordLive().setValue(adapter.getItemAtPosition(position).getWords());
     }
     /*
     public static List<Word> generateTestWordsList(int counter){

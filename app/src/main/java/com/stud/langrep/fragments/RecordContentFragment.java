@@ -18,6 +18,7 @@ import com.stud.langrep.adapters.WordsAdapter;
 import com.stud.langrep.database.entity.Record;
 import com.stud.langrep.database.entity.Word;
 import com.stud.langrep.databinding.RecordContentFragmentBinding;
+import com.stud.langrep.fragments.lesson.LessonFragment;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -93,6 +94,15 @@ public class RecordContentFragment extends Fragment {
         binding.options.setOnClickListener((view -> {
             changeOptionsState();
         }));
+        binding.startPractice.setOnClickListener((view)->{
+            if(record.getWords() == null && record.getWords().size() == 0) {
+                Toast.makeText(getContext(), "Добавьте хотя бы одно слово", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.main_fragment, LessonFragment.getInstance(record),"record")
+                    .commit();
+        });
     }
     public void changeOptionsState(){
         if(isOptionsVisible){
@@ -113,6 +123,11 @@ public class RecordContentFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
+        //Сохраняем все добавленные слова
+        //Обновляем их количество в записи
         viewModel.saveWords(adapter.getWordList());
+        record.setWordCount(adapter.getItemCount());
+        record.setBasicDuration(viewModel.calculateTTSBasicDuration(adapter.getWordList()));
+        viewModel.updateRecord(record);
     }
 }

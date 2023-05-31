@@ -23,6 +23,8 @@ public class Record implements Serializable {
     private String recordName;
     @ColumnInfo(name = "basic_duration")
     private int basicDuration;
+    @ColumnInfo(name = "word_count")
+    private int wordCount;
     @Ignore
     private List<Word> words;
 
@@ -67,9 +69,11 @@ public class Record implements Serializable {
         this.recordName = recordName;
     }
 
-    public int getTotalWords() {
-        if(words == null) return 0;
-        return words.size();
+    public int getWordCount() {
+        return wordCount;
+    }
+    public void setWordCount(int wordCount){
+        this.wordCount = wordCount;
     }
 
     public void setWords(List<Word> words) {
