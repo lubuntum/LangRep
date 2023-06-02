@@ -66,7 +66,7 @@ public class LessonFragment extends Fragment {
                 return;
             }
             if(!binding.nativeWord.getText().toString()
-                    .equals(record.getWords().get(currentWord).getNativeWord())){
+                    .equalsIgnoreCase(record.getWords().get(currentWord).getNativeWord())){
                 Toast.makeText(getContext(), "Подумайте еще", Toast.LENGTH_SHORT).show();
                 binding.nextWordBtn.setColorFilter(ContextCompat.getColor(getContext(), com.beardedhen.androidbootstrap.R.color.bootstrap_brand_danger));
                 mistakes++;

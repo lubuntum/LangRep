@@ -44,17 +44,36 @@
                 android:hint="@string/translate"
                 android:inputType="textMultiLine"
                 android:textAlignment="center"/>
-            <ImageButton
-                android:id="@+id/micro_btn"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="5dp"
-                app:tint="@color/bootstrap_brand_info"
-                android:background="@android:color/transparent"
-                android:adjustViewBounds="true"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_micro"
-                android:contentDescription="@string/say_word_instead_writing" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="end"
+                android:paddingBottom="5dp"
+                android:paddingEnd="1dp">
+                <ImageButton
+                    android:id="@+id/micro_btn"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="5dp"
+                    app:tint="@color/bootstrap_brand_info"
+                    android:background="@android:color/transparent"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_micro"
+                    android:contentDescription="@string/say_word_instead_writing" />
+                <ImageButton
+                    android:id="@+id/sound_btn"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_sound"
+                    app:tint="@color/bootstrap_brand_info"
+                    android:background="@android:color/transparent"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:layout_marginTop="5dp" />
+            </LinearLayout>
+
         </LinearLayout>
         <LinearLayout
             android:id="@+id/end_session_container"

@@ -50,12 +50,12 @@ public class Record implements Serializable {
     }
     public String composePhraseForPlayingWithPrefs(SharedPreferences preferences){
         if (words == null) return null;
-        int pause_time = preferences.getInt(RecordViewModel.RECORD_DELAY, 500);
+        int pauseTime = preferences.getInt(RecordViewModel.RECORD_DELAY, 500);
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("<speak>");
         for (Word word: words){
             stringBuilder.append(word.getTranslatedWord())
-                    .append(String.format("<break time=\"%dms\"/>",pause_time));
+                    .append(String.format("<break time=\"%dms\"/>",pauseTime));
         }
         stringBuilder.append("</speak>");
     return stringBuilder.toString();

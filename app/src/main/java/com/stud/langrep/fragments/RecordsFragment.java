@@ -130,6 +130,10 @@ public class RecordsFragment extends Fragment implements
     @Override
     public void playSpeech(int position, RecordsAdapter.RecordViewHolder recordViewHolder) {
         binding.uploadBar.setVisibility(View.VISIBLE);
+        /*Короче нужно вынести обсервер из status и там отдельно разбивать слова
+        * на русские и английские как в юнит тесте, а затем проговаривать их с помощью tts,
+        * сам по себе  статус может быть установлен в null, тогда получится читать и на русском
+        * и на английском слово = перевод*/
         tts = new TextToSpeech(getContext(), status -> {
             if(status != TextToSpeech.ERROR) {
                 tts.setLanguage(Locale.ENGLISH);
